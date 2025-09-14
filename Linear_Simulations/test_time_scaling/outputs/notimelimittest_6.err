@@ -1,0 +1,5 @@
+mkdir: cannot create directory ‘runs/notimelimittest’: File exists
+/n/netscratch/pehlevan_lab/Lab/ml/ICL-structured-data/Linear_Simulations/test_time_scaling/common.py:13: RuntimeWarning: divide by zero encountered in scalar divide
+  B_top = np.hstack([C_hat  + (x/alpha)*np.eye(d), (x*mu).reshape(-1,1)])
+/n/netscratch/pehlevan_lab/Lab/ml/ICL-structured-data/Linear_Simulations/test_time_scaling/common.py:13: RuntimeWarning: invalid value encountered in multiply
+  B_top = np.hstack([C_hat  + (x/alpha)*np.eye(d), (x*mu).reshape(-1,1)])

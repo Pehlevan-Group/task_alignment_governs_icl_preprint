@@ -1,0 +1,2 @@
+mkdir: cannot create directory ‘runs/d150_average10_lambda0001’: File exists
+slurmstepd: error: *** JOB 28648458 ON holy8a31607 CANCELLED AT 2025-08-04T15:11:30 ***

@@ -1,9 +1,9 @@
 #!/bin/bash
-# quadratic_test.sbatch
+# THREE_softmaxWITHMLP_d10_1000steps.sbatch
 #
-#SBATCH --job-name=quadratic_test
-#SBATCH -o /n/netscratch/pehlevan_lab/Lab/ml/iclr25_icl_task_alignment/NONLINEAR/experiment/remote/kappasweep_neurips/outputs/quadratic_test_%a.out
-#SBATCH -e /n/netscratch/pehlevan_lab/Lab/ml/iclr25_icl_task_alignment/NONLINEAR/experiment/remote/kappasweep_neurips/outputs/quadratic_test_%a.err
+#SBATCH --job-name=THREE_softmaxWITHMLP_d10_1000steps
+#SBATCH -o /n/netscratch/pehlevan_lab/Lab/ml/iclr25_icl_task_alignment/NONLINEAR/experiment/remote/kappasweep_neurips/outputs/THREE_softmaxWITHMLP_d10_1000steps_%a.out
+#SBATCH -e /n/netscratch/pehlevan_lab/Lab/ml/iclr25_icl_task_alignment/NONLINEAR/experiment/remote/kappasweep_neurips/outputs/THREE_softmaxWITHMLP_d10_1000steps_%a.err
 #SBATCH -c 4
 #SBATCH --mem=64GB
 #SBATCH --gres=gpu:1
@@ -31,4 +31,4 @@ newdir="$parentdir/${SLURM_JOB_NAME}"
 pkldir="$parentdir/${SLURM_JOB_NAME}/pickles"
 mkdir "$newdir"
 mkdir "$pkldir"
-python kappasweep.py 10 $newdir $kappaind $avgind
+python kappasweep.py 10 $newdir $kappaind $avgind 3

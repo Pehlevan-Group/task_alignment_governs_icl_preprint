@@ -1,4 +1,3 @@
-import ast
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -22,9 +21,9 @@ rankfs = [0.2,0.4,0.6,0.8,1]
 signals = np.int64(np.linspace(0,d-1,d))
 
 sns.set(style="white",font_scale=4,palette="mako")
-plt.rcParams['lines.linewidth'] = 5
+plt.rcParams['lines.linewidth'] = 7
 color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
-fig, axes = plt.subplots(1, 4, figsize=(52,14), constrained_layout=True) 
+fig, axes = plt.subplots(1, 4, figsize=(46,10), sharey=True, constrained_layout=True)
 same_color = 'red' #"#07C573"
 
 keys = ['mary', 'F', 'trace', 'cka']
@@ -89,24 +88,21 @@ for plotting_index, key in enumerate(keys):
             Ctest = np.diag(complexity_class_covariance(d, int(d*f), True))
             theory_ranks.append(ICL_error(Ctr, Ctest, tau, alpha, kappa, rho, numavg=100))
         if i == 0:
-            axes[plotting_index].scatter(alignment_powers, theory_powers, marker='o', s=220, color='grey', label = 'Test on powerlaw')
-            axes[plotting_index].scatter(alignment_ranks, theory_ranks, marker='^', s=250, color='grey', label = 'Test on low ranks')
+            axes[plotting_index].scatter(alignment_powers, theory_powers, marker='o', s=280, color='grey', label = 'Test on powerlaw')
+            axes[plotting_index].scatter(alignment_ranks, theory_ranks, marker='^', s=300, color='grey', label = 'Test on low ranks')
             axes[plotting_index].scatter(alignment_match, theory_match, marker='*', s=400, color=same_color, label = 'Test on pretrain')
-        axes[plotting_index].scatter(alignment_ranks, theory_ranks, marker='^', s=250, color=color_cycle[i+1],zorder=i+2)
-        # for x, y, label in zip(alignment_spikes, theory_spikes, signals):
-        #     axes[plotting_index].text(x, y + 0.02, f'{(label+1):.0f}', color=color_cycle[i+1], fontsize=9, ha='center')
-        axes[plotting_index].scatter(alignment_powers, theory_powers, marker='o', s=220, color=color_cycle[i+1],zorder=i+2)
-        # for x, y, label in zip(alignment_powers, theory_powers, test_powers):
-        #     axes[plotting_index].text(x, y + 0.02, f'{(label-train_power):.1f}', color=color_cycle[i+1], fontsize=9, ha='center')
-        axes[plotting_index].scatter(alignment_match, theory_match, marker='*', s=500, color=same_color,zorder=i+3)
+        axes[plotting_index].scatter(alignment_ranks, theory_ranks, marker='^', s=300, color=color_cycle[i+1],zorder=i+2)
+        axes[plotting_index].scatter(alignment_powers, theory_powers, marker='o', s=280, color=color_cycle[i+1],zorder=i+2)
+        axes[plotting_index].scatter(alignment_match, theory_match, marker='*', s=600, color=same_color,zorder=i+3)
     
         concatenated_x = alignment_ranks + alignment_powers + [alignment_match]
         concatenated_y = list(theory_ranks) + list(theory_powers) + [theory_match]
         zipped = list(zip(concatenated_x, concatenated_y))
         sorted_pairs = sorted(zipped, key=lambda pair: pair[0])
         sorted_X, sorted_Y = zip(*sorted_pairs)
-        axes[plotting_index].plot(sorted_X,sorted_Y,color = color_cycle[i+1], alpha = 0.8, label =fr"$\kappa = $ {kappa}")
-
+        
+        axes[plotting_index].plot(alignment_ranks,theory_ranks, ':', color = color_cycle[i+1], alpha = 0.8, zorder = 1)
+        axes[plotting_index].plot(alignment_powers,theory_powers, '-', color = color_cycle[i+1], alpha = 0.8, label =fr"$\kappa = $ {kappa}", zorder = 1)
     # leg = axes[plotting_index].legend()
     # leg.get_frame().set_alpha(0)
     axes[plotting_index].spines['top'].set_color('lightgray')
@@ -115,24 +111,26 @@ for plotting_index, key in enumerate(keys):
     axes[plotting_index].spines['left'].set_color('lightgray')
 
     if key == 'mary':
-        axes[plotting_index].set_xlabel(fr"Theory-derived measure $e_{{\mathrm{{align}}}}(C_{{\mathrm{{tr}}}}, C_{{\mathrm{{test}}}})$")
+        axes[plotting_index].set_xlabel(fr"$e_{{\mathrm{{misalign}}}} = \langle C_{{\mathrm{{test}}}} \mathcal{{K}} \rangle$")
     if key == 'trace':
-        axes[plotting_index].set_xlabel(fr"Simple matrix measure $\mathrm{{tr}}[C_{{\mathrm{{test}}}}C_{{\mathrm{{tr}}}}^{{-1}}]$")
+        axes[plotting_index].set_xlabel(fr"$\langle C_{{\mathrm{{test}}}} C_{{\mathrm{{train}}}}^{{-1}} \rangle$")
     if key == 'F':
-        axes[plotting_index].set_xlabel(fr"Resolvent measure $\mathrm{{tr}}[C_{{\mathrm{{test}}}}F]$")
+        axes[plotting_index].set_xlabel(fr"$\langle C_{{\mathrm{{test}}}} F_\kappa(\sigma) \rangle$")
     if key == 'cka':
-        axes[plotting_index].set_xlabel(fr"Kernel measure $\mathrm{{CKA}}(C_{{\mathrm{{tr}}}}, C_{{\mathrm{{test}}}})$")
-    axes[plotting_index].set_ylabel('ICL error')
+        axes[plotting_index].set_xlabel(fr"$\mathrm{{CKA}}(C_{{\mathrm{{tr}}}}, C_{{\mathrm{{test}}}})^{{-1}}$")
+    if plotting_index == 0:
+        axes[plotting_index].set_ylabel(fr"$e_{{\mathrm{{ICL}}}}(C_{{\mathrm{{tr}}}}, C_{{\mathrm{{test}}}})$")
     axes[plotting_index].tick_params(axis='both', which='major',labelsize=30)
 
 # # Get handles and labels from first subplot (or any subplot)
 handles, labels = axes[0].get_legend_handles_labels()
 
-# Put legend to the right, vertically centered
+# Add a single legend above all subplots
 fig.legend(handles, labels,
-           loc='center left',
-           bbox_to_anchor=(1, 0.5),  # push slightly further right
-           frameon=False)
+           loc='upper center',        # place legend at top center
+           bbox_to_anchor=(0.5, 1.12),# adjust vertical position
+           ncol=len(labels),          # put entries in a single row
+           frameon=False)             # optional: no box
 
 # Adjust layout and save
 plt.savefig(f'final_alignment_plots/{figurename}.pdf', bbox_inches='tight')

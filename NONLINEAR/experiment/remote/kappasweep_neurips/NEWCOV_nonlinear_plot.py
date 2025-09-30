@@ -88,9 +88,9 @@ rankfs = [0.2,0.4,0.6,0.8,1]
 experiment_d = d
 
 sns.set(style="white",font_scale=4,palette="mako")
-plt.rcParams['lines.linewidth'] = 5
+plt.rcParams['lines.linewidth'] = 7
 color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
-fig, axes = plt.subplots(1, 4, figsize=(52,14), constrained_layout=True) 
+fig, axes = plt.subplots(1, 4, figsize=(46,10), sharey=True, constrained_layout=True)
 same_color = 'red' #"#07C573"
 
 keys = ['mary', 'F', 'trace', 'cka']
@@ -158,28 +158,24 @@ for plotting_index, key in enumerate(keys):
                 alignment_ranks.append((cka(d,Ctr,Ctest)/np.sqrt(cka(d,Ctr,Ctr)*cka(d,Ctest,Ctest)))**(-1))
 
         if i == 0:
-            axes[plotting_index].scatter(alignment_powers, test_on_powers_m[i,:], marker='o', s=220, color='grey', label = 'Test on powerlaw')
-            axes[plotting_index].scatter(alignment_ranks, test_on_ranks_m[i,:], marker='^', s=250, color='grey', label = 'Test on low ranks')
+            axes[plotting_index].scatter(alignment_powers, test_on_powers_m[i,:], marker='o', s=280, color='grey', label = 'Test on powerlaw')
+            axes[plotting_index].scatter(alignment_ranks, test_on_ranks_m[i,:], marker='^', s=300, color='grey', label = 'Test on low ranks')
             # axes[plotting_index].scatter(alignment_exps, test_on_exps_m[i,:], marker='P', s=150, color='grey', label = 'Test on exponential decay')
-            axes[plotting_index].scatter(alignment_match, test_equals_train_m[i], marker='*', s=500, color=same_color, label = 'Test on pretrain')
+            axes[plotting_index].scatter(alignment_match, test_equals_train_m[i], marker='*', s=600, color=same_color, label = 'Test on pretrain')
 
         concatenated_x = alignment_ranks + alignment_powers + [alignment_match]
         concatenated_y = list(test_on_ranks_m[i,:]) +  list(test_on_powers_m[i,:]) + [test_equals_train_m[i]]
         zipped = list(zip(concatenated_x, concatenated_y))
         sorted_pairs = sorted(zipped, key=lambda pair: pair[0])
         sorted_X, sorted_Y = zip(*sorted_pairs)
-        axes[plotting_index].plot(sorted_X,sorted_Y,color = color_cycle[i+1], alpha = 0.8, label =fr"$\kappa = $ {kappa}",zorder=1)
-
+        #axes[plotting_index].plot(sorted_X,sorted_Y,color = color_cycle[i+1], alpha = 0.8, label =fr"$\kappa = $ {kappa}",zorder=1)
         kappa_average_spearman.append(scipy.stats.spearmanr(sorted_X, sorted_Y).statistic) 
 
-        axes[plotting_index].scatter(alignment_ranks, test_on_ranks_m[i,:], marker='^', s=250, color=color_cycle[i+1], zorder = i+2)
-        # for x, y, label in zip(alignment_spikes, test_on_spikes_m[i,:], signals):
-        #     axes[plotting_index].text(x, y + 0.02, f'{(label+1):.0f}', color=color_cycle[i+1], fontsize=9, ha='center')
-        axes[plotting_index].scatter(alignment_powers, test_on_powers_m[i,:], marker='o', s=220, color=color_cycle[i+1], zorder = i+2)
-        # for x, y, label in zip(alignment_powers, test_on_powers_m[i,:], test_powers):
-        #     axes[plotting_index].text(x, y + 0.02, f'{(label-train_power):.1f}', color=color_cycle[i+1], fontsize=9, ha='center')
-        # axes[plotting_index].scatter(alignment_exps, test_on_exps_m[i,:], marker='P', s=150, color=color_cycle[i+1], zorder = i+2)
-        axes[plotting_index].scatter(alignment_match, test_equals_train_m[i], marker='*', s=500, color=same_color, zorder = i+10)
+        axes[plotting_index].plot(alignment_ranks, test_on_ranks_m[i,:], ':', color=color_cycle[i+1], alpha = 0.8, zorder=1)
+        axes[plotting_index].plot(alignment_powers, test_on_powers_m[i,:], '-', color=color_cycle[i+1], alpha = 0.8, label =fr"$\kappa = $ {kappa}", zorder=1)
+        axes[plotting_index].scatter(alignment_ranks, test_on_ranks_m[i,:], marker='^', s=300, color=color_cycle[i+1], zorder = i+2)
+        axes[plotting_index].scatter(alignment_powers, test_on_powers_m[i,:], marker='o', s=280, color=color_cycle[i+1], zorder = i+2)
+        axes[plotting_index].scatter(alignment_match, test_equals_train_m[i], marker='*', s=600, color=same_color, zorder = i+10)
 
     kappa_average_spearman = np.array(kappa_average_spearman)
     axes[plotting_index].spines['top'].set_color('lightgray')
@@ -187,25 +183,33 @@ for plotting_index, key in enumerate(keys):
     axes[plotting_index].spines['bottom'].set_color('lightgray')
     axes[plotting_index].spines['left'].set_color('lightgray')
     if key == 'mary':
-        axes[plotting_index].set_xlabel(fr"Theory-derived measure $e_{{\mathrm{{align}}}}(C_{{\mathrm{{tr}}}}, C_{{\mathrm{{test}}}})$")
+        axes[plotting_index].set_xlabel(fr"$e_{{\mathrm{{misalign}}}} = \langle C_{{\mathrm{{test}}}} \mathcal{{K}} \rangle$")
     if key == 'trace':
-        axes[plotting_index].set_xlabel(fr"Simple matrix measure $\mathrm{{tr}}[C_{{\mathrm{{test}}}}C_{{\mathrm{{tr}}}}^{{-1}}]$")
+        axes[plotting_index].set_xlabel(fr"$\langle C_{{\mathrm{{test}}}} C_{{\mathrm{{train}}}}^{{-1}} \rangle$")
     if key == 'F':
-        axes[plotting_index].set_xlabel(fr"Resolvent measure $\mathrm{{tr}}[C_{{\mathrm{{test}}}}F]$")
+        axes[plotting_index].set_xlabel(fr"$\langle C_{{\mathrm{{test}}}} F_\kappa(\sigma) \rangle$")
     if key == 'cka':
-        axes[plotting_index].set_xlabel(fr"Kernel measure 1/$\mathrm{{CKA}}(C_{{\mathrm{{tr}}}}, C_{{\mathrm{{test}}}})$")
-    axes[plotting_index].set_ylabel('ICL error')
+        axes[plotting_index].set_xlabel(fr"$\mathrm{{CKA}}(C_{{\mathrm{{tr}}}}, C_{{\mathrm{{test}}}})^{{-1}}$")
+    if plotting_index==0:
+        axes[plotting_index].set_ylabel('Transformer ICL error')
     axes[plotting_index].tick_params(axis='both', which='major', labelsize=30)
     print('key is ', key, 'and spearman is ', np.mean(kappa_average_spearman))
     
 # # Get handles and labels from first subplot (or any subplot)
 handles, labels = axes[0].get_legend_handles_labels()
 
-# Put legend to the right, vertically centered
+# # Put legend to the right, vertically centered
+# fig.legend(handles, labels,
+#            loc='center left',
+#            bbox_to_anchor=(1, 0.5),  # push slightly further right
+#            frameon=False)
+
+# Add a single legend above all subplots
 fig.legend(handles, labels,
-           loc='center left',
-           bbox_to_anchor=(1, 0.5),  # push slightly further right
-           frameon=False)
+           loc='upper center',        # place legend at top center
+           bbox_to_anchor=(0.5, 1.12),# adjust vertical position
+           ncol=len(labels),          # put entries in a single row
+           frameon=False)             # optional: no box
 
 # Adjust layout and save
 plt.savefig(f'final_alignment_plots/{figurename}.pdf', bbox_inches='tight')

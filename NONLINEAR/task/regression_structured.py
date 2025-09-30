@@ -25,7 +25,10 @@ class fulltasksampler:
         xs = self.rng.normal(loc=0, scale = 1/np.sqrt(self.d), size=(self.n, self.l + 1, self.d))
         ws = self.rng.multivariate_normal(mean=np.zeros(self.d), cov=self.Ctask, size=self.n)
         ws = ws[..., np.newaxis] 
-        ys = (xs @ ws)**self.single_index_power + self.rng.normal(loc=0, scale = np.sqrt(self.rho), size=(self.n, self.l+1, 1))
+        if self.single_index_power==0:
+            ys = np.tanh(xs @ ws) + self.rng.normal(loc=0, scale = np.sqrt(self.rho), size=(self.n, self.l+1, 1))
+        else:
+            ys = (xs @ ws)**self.single_index_power + self.rng.normal(loc=0, scale = np.sqrt(self.rho), size=(self.n, self.l+1, 1))
         Z = np.zeros((self.n, self.l + 1, self.d + 1))
         Z[:,:,0:self.d] = xs
         Z[:,:,-1] = ys.squeeze()

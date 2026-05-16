@@ -19,6 +19,24 @@ This paper builds on previous work studying in-context learning in the linear re
 
 This codebase will provide the necessary theory and experiment code for recreating our paper figures. 
 
+## Environment Setup
+
+This repository includes an environment file at `environment.yml`. It creates an environment named `task-align-icl` with the packages used across our repo code. You can create and activate the environment with `mamba`
+
+```bash
+mamba env create -f environment.yml
+mamba activate task-align-icl
+```
+
+or with `conda`
+
+```bash
+conda env create -f environment.yml
+conda activate task-align-icl
+```
+
+To check the environment, run `env_checker.py`. Make sure JAX can run on GPU by allocating a GPU first, activating the environment, running `env_checker.py`, and seeing if it prints CUDA or if it prints CPU. 
+
 ## Figure Roadmap
 
 The code will be organized around some of our paper figures.
@@ -42,8 +60,6 @@ _The code necessary for this figure is theory formulas and finite-sample reduced
 
 - `reduced_model_codebase/`: Reduced linear-attention theory and finite simulation code. This computes $\Gamma^*$ from sampled data numerically and evaluates the reduced-linear attention MSE loss on these parameters. 
 - `transformer_codebase/`: Transformer model, data, and training code.
-- `quick_and_easy_figure/`: This is a self-contained directory that includes an instruction `.md` file, data-populating code, and data-plotting code. The output of this is a proof-of-concept figure emmulating Figure 6, i.e. the phase transition of task generalisation in task diversity. This is meant to be runable "easily" on CPU. 
 - `run_from_scratch/`: Scripts and all information necessary for rerunning experiments used. This is organised per figure, with instruction `.md` files given in each folder.
-
 
 

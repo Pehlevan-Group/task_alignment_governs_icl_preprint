@@ -12,7 +12,7 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-user=maryletey@fas.harvard.edu
 
-source activate try4
+source activate task-align-icl
 
 parentdir="runs"
 newdir="$parentdir/${SLURM_JOB_NAME}"

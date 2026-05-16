@@ -1,0 +1,26 @@
+name: task-align-icl
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+
+  # Core numerical and plotting stack for reduced-model theory and figures.
+  - numpy
+  - scipy
+  - matplotlib
+  - seaborn
+  - tqdm
+
+  # Transformer training stack.
+  - jax
+  - jaxlib
+  - flax
+  - optax
+
+  # Notebook support for Figure 4 and optional W&B logging in train.py.
+  - ipykernel
+  - ipywidgets
+  - jupyterlab
+  - notebook
+  - wandb

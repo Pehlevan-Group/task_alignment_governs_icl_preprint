@@ -1,0 +1,32 @@
+[project]
+name = "task-align-icl"
+version = "0.1.0"
+description = "Environment definition for the task-alignment in-context learning figure code."
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "seaborn",
+    "tqdm",
+    "jax",
+    "flax",
+    "optax",
+]
+
+[project.optional-dependencies]
+notebook = [
+    "ipykernel",
+    "ipywidgets",
+    "jupyterlab",
+    "notebook",
+]
+logging = [
+    "wandb",
+]
+cuda12 = [
+    "jax[cuda12]",
+]
+cuda13 = [
+    "jax[cuda13]",
+]

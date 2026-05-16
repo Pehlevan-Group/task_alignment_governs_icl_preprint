@@ -12,7 +12,16 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-user=maryletey@fas.harvard.edu
 
-source activate task-align-icl
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "$script_dir/../.." && pwd)"
+
+if [ -d "$repo_root/.venv" ]; then
+    source "$repo_root/.venv/bin/activate"
+else
+    source activate task-align-icl
+fi
+
+cd "$script_dir"
 
 parentdir="runs"
 newdir="$parentdir/${SLURM_JOB_NAME}"

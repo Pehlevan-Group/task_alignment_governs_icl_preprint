@@ -21,7 +21,54 @@ This codebase will provide the necessary theory and experiment code for recreati
 
 ## Environment Setup
 
-This repository includes an environment file at `environment.yml`. It creates an environment named `task-align-icl` with the packages used across our repo code. You can create and activate the environment with `mamba`
+### Fast setup with uv
+
+The fastest setup path is `uv`, which uses the `pyproject.toml` file in this repository and creates a local `.venv/` directory.
+
+```bash
+uv sync
+```
+
+This installs the core repo dependencies. To use the environment explicitly:
+
+```bash
+source .venv/bin/activate
+python env_checker.py
+```
+
+You can also run commands through uv without activating:
+
+```bash
+uv run python env_checker.py
+```
+
+Install notebook support and optional W&B logging only when you need them:
+
+```bash
+uv sync --extra notebook --extra logging
+```
+
+For GPU JAX, run uv on a GPU node and choose the CUDA extra that matches the node driver. For CUDA 12:
+
+```bash
+uv sync --extra cuda12
+uv run python env_checker.py
+```
+
+For CUDA 13:
+
+```bash
+uv sync --extra cuda13
+uv run python env_checker.py
+```
+
+You can combine extras as needed, for example `uv sync --extra cuda12 --extra notebook --extra logging`.
+
+Do not use `uv sync --all-extras` for this repo, because the CUDA 12 and CUDA 13 JAX extras are mutually exclusive installation choices.
+
+### Conda/Mamba setup
+
+This repository also includes an environment file at `environment.yml`. It creates an environment named `task-align-icl` with the packages used across our repo code. You can create and activate the environment with `mamba`
 
 ```bash
 mamba env create -f environment.yml
@@ -61,5 +108,4 @@ _The code necessary for this figure is theory formulas and finite-sample reduced
 - `reduced_model_codebase/`: Reduced linear-attention theory and finite simulation code. This computes $\Gamma^*$ from sampled data numerically and evaluates the reduced-linear attention MSE loss on these parameters. 
 - `transformer_codebase/`: Transformer model, data, and training code.
 - `run_from_scratch/`: Scripts and all information necessary for rerunning experiments used. This is organised per figure, with instruction `.md` files given in each folder.
-
 
